@@ -1,13 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
-
-# filename = 'nvmCacheRaw_blackscholes_4K.dat'
-filename = 'nvmCacheRaw_blackscholes_16K.dat'
-# filename = 'nvmCacheRaw_blackscholes_64K.dat'
-# filename = 'nvmCacheRaw_blackscholes_10M.dat'
+import sys
 
 cache_lines = 32768
 line_bytes = 64
+
+filename = sys.argv[1]
 
 with open(filename, 'rb') as f:
     data = np.fromfile(f, dtype='<u8', count=line_bytes*cache_lines)
