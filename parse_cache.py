@@ -12,12 +12,33 @@ with open(filename, 'rb') as f:
     array = np.reshape(data, [cache_lines, line_bytes])
     array = np.vsplit(array, 16) # Split into 16 arrays for easier viewing
 
-    fig = plt.figure()
+    # get our minimum and maximum values for the colourmap
+    min_val = np.amin(array)
+    max_val = np.amax(array)
+    # print('{} {}'.format(min_val, max_val))
+
+    # create the subplots from the data
+    fig, axes = plt.subplots(ncols=16, sharey=True)
     for i in range(len(array)):
-        ax = fig.add_subplot(1, 16, i+1)
-        im = ax.imshow(array[i], cmap='viridis', interpolation='none', aspect='auto')
-        ax.set_xlim(-0.5, 63.5)
-        ax.margins(0, 0)
-        ax.axis('off')
-    fig.colorbar(im)
+        axes[i].imshow(array[i], cmap='viridis', interpolation='none', aspect='auto', vmin=min_val, vmax=max_val)
+        # add a heatmap for each cache division
+        im = axes[i].imshow(array[i], cmap='viridis', interpolation='none', aspect='auto', vmin=min_val, vmax=max_val)
+        # modify the x-ticks
+        if i == 0:
+            axes[i].set_xticks([0,32,64])
+        else:
+            axes[i].set_xticks([32,64])
+        # remove ticks for all plots except the first one
+        if i != 0:
+            axes[i].yaxis.set_ticks_position('none')
+
+    # add an axe for the colourbar and put it to the right of the plot
+    colour_bar_axe = fig.add_axes([0.92,0.15,0.01,0.7])
+
+    # show colourbar
+    fig.colorbar(im, cax=colour_bar_axe)
+
+    # adjust subplot margins
+    plt.subplots_adjust(left=0.075, bottom=None, right=None, top=None, wspace=0.05, hspace=None)
+
     plt.show()
