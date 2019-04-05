@@ -1,6 +1,10 @@
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import numpy as np
 import sys
+
+#the following fixes an overflow error when saving figure 3
+mpl.rcParams['agg.path.chunksize'] = 10000
 
 cache_lines = 32768
 line_bytes = 64
@@ -10,7 +14,7 @@ section_min = 20400
 section_max = 20600
 filename = path.split('/')[-1]
 
-show_plots = True
+show_plots = False
 save_plots = True
 
 with open(path, 'rb') as f:
